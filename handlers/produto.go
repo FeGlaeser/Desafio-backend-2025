@@ -16,7 +16,6 @@ func SetDB(db *sql.DB) {
 	DB = db
 }
 
-// Criar Produto
 func CreateProduto(w http.ResponseWriter, r *http.Request) {
 	var produto models.Produto
 	json.NewDecoder(r.Body).Decode(&produto)
@@ -30,7 +29,6 @@ func CreateProduto(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(produto)
 }
 
-// Listar Produtos
 func ListProdutos(w http.ResponseWriter, r *http.Request) {
 	rows, err := DB.Query("SELECT id, nome, preco, estoque FROM produtos")
 	if err != nil {
@@ -49,7 +47,6 @@ func ListProdutos(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(produtos)
 }
 
-// Atualizar Produto
 func UpdateProduto(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	var produto models.Produto
@@ -65,7 +62,6 @@ func UpdateProduto(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(produto)
 }
 
-// Deletar Produto
 func DeleteProduto(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 

@@ -10,12 +10,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Criar Pedido
 func CreatePedido(w http.ResponseWriter, r *http.Request) {
 	var pedido models.Pedido
 	json.NewDecoder(r.Body).Decode(&pedido)
 
-	// Inserir pedido
 	err := DB.QueryRow("INSERT INTO pedidos (cliente_id) VALUES ($1) RETURNING id, data_criacao, valor_total",
 		pedido.ClienteID).Scan(&pedido.ID, &pedido.DataCriacao, &pedido.ValorTotal)
 	if err != nil {
@@ -23,7 +21,6 @@ func CreatePedido(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Inserir itens
 	for _, item := range pedido.Produtos {
 		_, err := DB.Exec("INSERT INTO pedido_produtos (pedido_id, produto_id, quantidade) VALUES ($1, $2, $3)",
 			pedido.ID, item.ProdutoID, item.Quantidade)
@@ -33,7 +30,6 @@ func CreatePedido(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Buscar valor_total atualizado
 	err = DB.QueryRow("SELECT valor_total FROM pedidos WHERE id = $1", pedido.ID).Scan(&pedido.ValorTotal)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -43,24 +39,20 @@ func CreatePedido(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(pedido)
 }
 
-// Listar Pedidos (com filtro opcional por cliente_id e paginação)
 func ListPedidos(w http.ResponseWriter, r *http.Request) {
 	clienteIDStr := r.URL.Query().Get("cliente_id")
 	limitStr := r.URL.Query().Get("limit")
 	offsetStr := r.URL.Query().Get("offset")
 
-	// Valores padrão de paginação
 	limit := 10
 	offset := 0
 
-	// Convertendo limit
 	if limitStr != "" {
 		if l, err := strconv.Atoi(limitStr); err == nil && l > 0 {
 			limit = l
 		}
 	}
 
-	// Convertendo offset
 	if offsetStr != "" {
 		if o, err := strconv.Atoi(offsetStr); err == nil && o >= 0 {
 			offset = o
@@ -106,7 +98,6 @@ func ListPedidos(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Buscar produtos do pedido
 		prodRows, err := DB.Query("SELECT produto_id, quantidade FROM pedido_produtos WHERE pedido_id = $1", p.ID)
 		if err == nil {
 			for prodRows.Next() {
@@ -127,13 +118,11 @@ func ListPedidos(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(pedidos)
 }
 
-// Atualizar Pedido: adicionar ou atualizar produto
 func UpdatePedido(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	var pedido models.Pedido
 	json.NewDecoder(r.Body).Decode(&pedido)
 
-	// Inserir ou atualizar itens
 	for _, item := range pedido.Produtos {
 		_, err := DB.Exec(`
 			INSERT INTO pedido_produtos (pedido_id, produto_id, quantidade)
@@ -147,7 +136,6 @@ func UpdatePedido(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Buscar valor_total atualizado
 	err := DB.QueryRow("SELECT valor_total FROM pedidos WHERE id = $1", id).Scan(&pedido.ValorTotal)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -158,7 +146,6 @@ func UpdatePedido(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(pedido)
 }
 
-// Deletar Pedido
 func DeletePedido(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
@@ -168,5 +155,5 @@ func DeletePedido(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent) // 204
+	w.WriteHeader(http.StatusNoContent) 
 }

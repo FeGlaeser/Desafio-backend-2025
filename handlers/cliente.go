@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Criar Cliente
 func CreateCliente(w http.ResponseWriter, r *http.Request) {
 	var cliente models.Cliente
 	json.NewDecoder(r.Body).Decode(&cliente)
@@ -23,7 +22,7 @@ func CreateCliente(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(cliente)
 }
 
-// Listar Clientes
+
 func ListClientes(w http.ResponseWriter, r *http.Request) {
 	rows, err := DB.Query("SELECT id, nome, telefone FROM clientes")
 	if err != nil {
@@ -42,7 +41,6 @@ func ListClientes(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(clientes)
 }
 
-// Atualizar Cliente
 func UpdateCliente(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	var cliente models.Cliente
@@ -58,7 +56,6 @@ func UpdateCliente(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(cliente)
 }
 
-// Deletar Cliente
 func DeleteCliente(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 

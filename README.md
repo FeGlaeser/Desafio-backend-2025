@@ -69,7 +69,7 @@ api-rest-vendas/
 ### 📦 1. Clone o projeto
 
 ```bash
-git clone https://github.com/FeGlaeser/Desafio-backend-2025.git
+git clone https://github.com/FeGlaeser/api-rest-vendas.git
 cd api-rest-vendas
 ```
 
