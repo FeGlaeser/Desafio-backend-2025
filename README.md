@@ -54,6 +54,8 @@ api-rest-vendas/
 ├── go.mod
 ├── go.sum
 ├── schema.sql
+├── readme.md
+├── swagger.yaml
 └── .env (opcional)
 ```
 
