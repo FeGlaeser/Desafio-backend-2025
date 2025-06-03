@@ -201,6 +201,14 @@ GET /pedidos?limit=3&offset=6
 ] 
 ```
 
+## 📚 Documentação Swagger
+
+A especificação OpenAPI está disponível no arquivo `swagger.yaml`.  
+Você pode visualizá-la utilizando:
+
+- [Swagger Editor online](https://editor.swagger.io/)
+- Redoc CLI (`npm install -g redoc-cli && redoc-cli preview swagger.yaml`)
+
 ## 📅 Prazo
 
 Entrega até **segunda-feira, 2 de junho, às 23:59**.
