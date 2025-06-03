@@ -2,6 +2,7 @@ package main
 
 import (
 	"api-rest-vendas/handlers"
+	"api-rest-vendas/middleware"
 	"log"
 	"net/http"
 
@@ -13,6 +14,8 @@ func main() {
 	handlers.SetDB(DB)
 
 	r := mux.NewRouter().StrictSlash(true)
+
+	r.Use(middleware.CORS)
 
 	r.HandleFunc("/produtos", handlers.CreateProduto).Methods("POST")
 	r.HandleFunc("/produtos", handlers.ListProdutos).Methods("GET")
@@ -28,7 +31,6 @@ func main() {
 	r.HandleFunc("/pedidos", handlers.ListPedidos).Methods("GET")
 	r.HandleFunc("/pedidos/{id}", handlers.UpdatePedido).Methods("PUT")
 	r.HandleFunc("/pedidos/{id}", handlers.DeletePedido).Methods("DELETE")
-
 
 	log.Println("Servidor rodando na porta 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))

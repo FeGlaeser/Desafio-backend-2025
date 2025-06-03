@@ -41,6 +41,8 @@ Esta API RESTful foi desenvolvida em Go para gerenciar produtos, clientes e pedi
 api-rest-vendas/
 ├── main.go
 ├── db.go
+├── middleware/
+│   └── cors.go
 ├── handlers/
 │   ├── produto.go
 │   ├── cliente.go
