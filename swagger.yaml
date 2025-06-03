@@ -1,0 +1,323 @@
+openapi: 3.0.3
+info:
+  title: API RESTful - Sistema de Vendas
+  description: API para gerenciar produtos, clientes e pedidos de uma loja fictícia.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /produtos:
+    get:
+      summary: Listar todos os produtos
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+    post:
+      summary: Criar um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoProduto'
+      responses:
+        '201':
+          description: Produto criado com sucesso
+  /produtos/{id}:
+    get:
+      summary: Buscar um produto pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+    put:
+      summary: Atualizar um produto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoProduto'
+      responses:
+        '200':
+          description: Produto atualizado
+    delete:
+      summary: Deletar um produto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Produto deletado com sucesso
+
+  /clientes:
+    get:
+      summary: Listar todos os clientes
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+    post:
+      summary: Criar um novo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoCliente'
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+  /clientes/{id}:
+    get:
+      summary: Buscar um cliente pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: Cliente não encontrado
+    put:
+      summary: Atualizar um cliente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoCliente'
+      responses:
+        '200':
+          description: Cliente atualizado
+    delete:
+      summary: Deletar um cliente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Cliente deletado com sucesso
+
+  /pedidos:
+    get:
+      summary: Listar pedidos
+      parameters:
+        - in: query
+          name: cliente_id
+          schema:
+            type: integer
+          description: Filtra pedidos pelo ID do cliente
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Número máximo de pedidos retornados
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Quantidade de pedidos a serem ignorados
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+    post:
+      summary: Criar um novo pedido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoPedido'
+      responses:
+        '201':
+          description: Pedido criado com sucesso
+
+  /pedidos/{id}:
+    get:
+      summary: Buscar um pedido pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pedido encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Pedido não encontrado
+    put:
+      summary: Atualizar um pedido
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoPedido'
+      responses:
+        '200':
+          description: Pedido atualizado
+    delete:
+      summary: Deletar um pedido
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Pedido deletado com sucesso
+
+components:
+  schemas:
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number
+          format: float
+        estoque:
+          type: integer
+    NovoProduto:
+      type: object
+      required:
+        - nome
+        - preco
+        - estoque
+      properties:
+        nome:
+          type: string
+        preco:
+          type: number
+          format: float
+        estoque:
+          type: integer
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        telefone:
+          type: string
+    NovoCliente:
+      type: object
+      required:
+        - nome
+        - telefone
+      properties:
+        nome:
+          type: string
+        telefone:
+          type: string
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+        cliente_id:
+          type: integer
+        produtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
+        valor_total:
+          type: number
+          format: float
+        data_criacao:
+          type: string
+          format: date-time
+    NovoPedido:
+      type: object
+      required:
+        - cliente_id
+        - produtos
+      properties:
+        cliente_id:
+          type: integer
+        produtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
+    ItemPedido:
+      type: object
+      required:
+        - produto_id
+        - quantidade
+      properties:
+        produto_id:
+          type: integer
+        quantidade:
+          type: integer
